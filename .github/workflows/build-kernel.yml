@@ -1,0 +1,21 @@
+name: Build Kernel
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v4
+
+      - name: Setup Environment
+        run: |
+          sudo apt-get update && sudo apt-get install -y bc bison build-essential flex libssl-dev libncurses5-dev git wget
+
+      - name: Build Kernel
+        run: |
+          export ARCH=arm64
+          export SUBARCH=arm64
+          make O=out certus_defconfig
+          make O=out -j$(nproc)
