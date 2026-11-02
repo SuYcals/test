@@ -1,4 +1,5 @@
 name: Build Kernel
+
 on:
   workflow_dispatch:
 
@@ -11,7 +12,9 @@ jobs:
 
       - name: Setup Environment
         run: |
-          sudo apt-get update && sudo apt-get install -y bc bison build-essential flex libssl-dev libncurses5-dev git wget gcc-arm-linux-gnueabi gcc-aarch64-linux-gnu
+          sudo apt-get update && sudo apt-get install -y \
+            bc bison build-essential flex libssl-dev libncurses5-dev \
+            git wget gcc-arm-linux-gnueabi gcc-aarch64-linux-gnu
 
       - name: Build Kernel
         run: |
@@ -21,4 +24,4 @@ jobs:
           export CROSS_COMPILE_ARM32=arm-linux-gnueabi-
           
           make O=out certus_defconfig
-          make O=out -j$(nproc)
+          make O=out -j$(nproc) KCFLAGS="-Wno-error=array-bounds -Wno-error=stringop-overflow"
